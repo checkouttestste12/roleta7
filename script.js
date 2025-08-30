@@ -1,4 +1,4 @@
-// ===== ROLETA PROFISSIONAL COM GIRO ULTRA MELHORADO =====
+// ===== ROLETA PROFISSIONAL COM GIRO ULTRA MELHORADO - VERSÃO SIMPLIFICADA =====
 
 // Estados da máquina de estados da roleta
 const ESTADOS_ROLETA = {
@@ -29,26 +29,21 @@ const elements = {
     btnGirar: document.getElementById('btn-girar'),
     btnParar: document.getElementById('btn-parar'),
     roleta: document.getElementById('roleta'),
-    statusText: document.getElementById('status-text'),
-    velocidadeBar: document.getElementById('velocidade-bar'),
-    resultado: document.getElementById('resultado'),
-    toastContainer: document.getElementById('toast-container'),
-    particlesBg: document.getElementById('particles-bg'),
     roletaContainer: document.getElementById('roleta-gratis-container'),
     girosPremiosInfo: document.getElementById('giros-premios-info')
 };
 
-// Configurações da roleta
+// Configurações da roleta simplificada (8 setores como as mesas)
 const roletaConfig = {
     setores: [
-        { premio: 0, texto: 'Vazio', angulo: 0 },
-        { premio: 25, texto: 'R$ 25', angulo: 45 },
-        { premio: 0, texto: 'Vazio', angulo: 90 },
-        { premio: 50, texto: 'R$ 50', angulo: 135 },
-        { premio: 0, texto: 'Vazio', angulo: 180 },
-        { premio: 75, texto: 'R$ 75', angulo: 225 },
-        { premio: 0, texto: 'Vazio', angulo: 270 },
-        { premio: 100, texto: 'R$ 100', angulo: 315 }
+        { premio: 25, texto: 'R$ 25', angulo: 0, cor: '#ffd700' },
+        { premio: 0, texto: 'Vazio', angulo: 45, cor: '#2a2a2a' },
+        { premio: 50, texto: 'R$ 50', angulo: 90, cor: '#ff6b6b' },
+        { premio: 0, texto: 'Vazio', angulo: 135, cor: '#2a2a2a' },
+        { premio: 75, texto: 'R$ 75', angulo: 180, cor: '#4ecdc4' },
+        { premio: 0, texto: 'Vazio', angulo: 225, cor: '#2a2a2a' },
+        { premio: 25, texto: 'R$ 25', angulo: 270, cor: '#ffd700' },
+        { premio: 0, texto: 'Vazio', angulo: 315, cor: '#2a2a2a' }
     ]
 };
 
@@ -79,10 +74,6 @@ class FisicaProfissional {
         this.ultimaVelocidade = 0;
         this.momentoAngular = 0; // Novo: momento angular para física mais realista
         this.atrito = 0.998; // Novo: atrito sutil
-        
-        // Sistema de curvas de easing profissionais
-        this.curvaAceleracao = 'easeOutExpo';
-        this.curvaDesaceleracao = 'easeInOutQuint';
         
         this.anguloAlvo = 0;
         this.precisaoAlvo = 0.1; // Precisão melhorada para parada
@@ -254,10 +245,6 @@ class FisicaProfissional {
     easeInOutQuint(t) {
         return t < 0.5 ? 16 * t * t * t * t * t : 1 - Math.pow(-2 * t + 2, 5) / 2;
     }
-
-    easeInOutQuart(t) {
-        return t < 0.5 ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2;
-    }
 }
 
 // ===== SISTEMA DE ÁUDIO PROFISSIONAL =====
@@ -423,149 +410,105 @@ class EfeitosVisuaisProfissionais {
     constructor() {
         this.ultimaVelocidade = 0;
         this.transicaoSuave = 0.08; // Transição mais suave
-        this.historico = []; // Histórico de velocidades para suavização avançada
-        this.maxHistorico = 10;
     }
     
     aplicarEfeitosVelocidade(velocidade) {
         if (!elements.roleta) return;
         
-        // Sistema de suavização com histórico
-        this.historico.push(velocidade);
-        if (this.historico.length > this.maxHistorico) {
-            this.historico.shift();
+        // Suavizar transições de velocidade
+        this.ultimaVelocidade = this.lerp(this.ultimaVelocidade, velocidade, this.transicaoSuave);
+        
+        // Aplicar efeitos baseados na velocidade suavizada
+        const intensidade = Math.min(1, this.ultimaVelocidade / 25);
+        
+        // Efeito de brilho mais sutil
+        const brilho = 0.3 + (intensidade * 0.7);
+        const blur = intensidade * 2;
+        const saturacao = 1 + (intensidade * 0.5);
+        
+        elements.roleta.style.filter = `brightness(${brilho}) blur(${blur}px) saturate(${saturacao})`;
+        
+        // Adicionar/remover classe de giro
+        if (velocidade > 5) {
+            elements.roleta.classList.add('girando');
+            if (elements.roletaContainer) {
+                elements.roletaContainer.classList.add('girando');
+            }
+        } else {
+            elements.roleta.classList.remove('girando');
+            if (elements.roletaContainer) {
+                elements.roletaContainer.classList.remove('girando');
+            }
         }
-        
-        // Média móvel para suavização ultra avançada
-        const velocidadeMedia = this.historico.reduce((a, b) => a + b, 0) / this.historico.length;
-        this.ultimaVelocidade = this.lerp(this.ultimaVelocidade, velocidadeMedia, this.transicaoSuave);
-        
-        const velocidadeNormalizada = Math.min(1, this.ultimaVelocidade / 30);
-        
-        // Motion blur ultra profissional
-        const blur = velocidadeNormalizada * 0.8; // Reduzido para efeito mais sutil
-        
-        // Brilho mais sutil e profissional
-        const brilho = 1 + (velocidadeNormalizada * 0.1);
-        
-        // Saturação dinâmica mais refinada
-        const saturacao = 1 + (velocidadeNormalizada * 0.15);
-        
-        // Contraste sutil para profundidade
-        const contraste = 1 + (velocidadeNormalizada * 0.05);
-        
-        // Aplicar efeitos com transição ultra suave
-        elements.roleta.style.filter = `blur(${blur}px) brightness(${brilho}) saturate(${saturacao}) contrast(${contraste})`;
-        
-        // Sombra dinâmica mais sofisticada
-        const sombra = velocidadeNormalizada * 15;
-        const corSombra = `rgba(255, 215, 0, ${velocidadeNormalizada * 0.2})`;
-        const sombraSecundaria = `rgba(138, 43, 226, ${velocidadeNormalizada * 0.1})`;
-        elements.roleta.style.boxShadow = `
-            0 0 ${sombra}px ${corSombra},
-            0 0 ${sombra * 2}px ${sombraSecundaria}
-        `;
-        
-        // Efeito de escala sutil para dar sensação de profundidade
-        const escala = 1 + (velocidadeNormalizada * 0.02);
-        elements.roleta.style.transform = `rotate(${gameState.anguloAtual}deg) scale(${escala})`;
     }
     
     criarParticulasGiroProfissionais() {
-        if (!elements.particlesBg) return;
-        
-        // Partículas mais sofisticadas e menos frequentes
-        for (let i = 0; i < 2; i++) {
+        // Criar partículas mais sutis durante o giro
+        for (let i = 0; i < 3; i++) {
             const particula = document.createElement('div');
-            const tamanho = Math.random() * 2 + 1;
-            const cores = [
-                'rgba(255, 215, 0, 0.3)',
-                'rgba(255, 107, 107, 0.25)',
-                'rgba(76, 205, 196, 0.25)',
-                'rgba(138, 43, 226, 0.2)',
-                'rgba(255, 165, 0, 0.25)'
-            ];
-            
             particula.style.cssText = `
                 position: absolute;
-                width: ${tamanho}px;
-                height: ${tamanho}px;
-                background: ${cores[Math.floor(Math.random() * cores.length)]};
+                width: 4px;
+                height: 4px;
+                background: #ffd700;
                 border-radius: 50%;
-                pointer-events: none;
                 left: ${Math.random() * 100}%;
                 top: ${Math.random() * 100}%;
-                animation: particulaGiroProfissional 2s ease-out forwards;
-                will-change: transform, opacity;
-                filter: blur(0.5px);
+                pointer-events: none;
+                animation: particulaGiroProfissional 1s ease-out forwards;
+                z-index: 1000;
             `;
             
-            elements.particlesBg.appendChild(particula);
+            document.body.appendChild(particula);
             
             setTimeout(() => {
                 if (particula.parentNode) {
                     particula.parentNode.removeChild(particula);
                 }
-            }, 2000);
+            }, 1000);
         }
     }
     
     criarConfetesProfissionais() {
-        if (!elements.particlesBg) return;
-        
         // Confetes mais elegantes e controlados
-        for (let i = 0; i < 25; i++) {
+        for (let i = 0; i < 15; i++) {
             const confete = document.createElement('div');
             const cores = ['#ffd700', '#ff6b6b', '#4ecdc4', '#9b59b6', '#ff9f43', '#26de81'];
-            const formas = ['circle', 'square', 'triangle'];
-            const forma = formas[Math.floor(Math.random() * formas.length)];
-            
-            let estiloForma = '';
-            if (forma === 'circle') {
-                estiloForma = 'border-radius: 50%;';
-            } else if (forma === 'triangle') {
-                estiloForma = `
-                    width: 0;
-                    height: 0;
-                    border-left: 3px solid transparent;
-                    border-right: 3px solid transparent;
-                    border-bottom: 6px solid ${cores[Math.floor(Math.random() * cores.length)]};
-                    background: transparent;
-                `;
-            }
             
             confete.style.cssText = `
-                position: absolute;
-                width: ${forma === 'triangle' ? '0' : Math.random() * 4 + 2 + 'px'};
-                height: ${forma === 'triangle' ? '0' : Math.random() * 4 + 2 + 'px'};
-                background: ${forma === 'triangle' ? 'transparent' : cores[Math.floor(Math.random() * cores.length)]};
-                ${estiloForma}
+                position: fixed;
+                width: ${Math.random() * 6 + 3}px;
+                height: ${Math.random() * 6 + 3}px;
+                background: ${cores[Math.floor(Math.random() * cores.length)]};
+                border-radius: 50%;
                 left: ${Math.random() * 100}%;
                 top: -10px;
                 pointer-events: none;
                 animation: confeteFallProfissional ${2 + Math.random() * 2}s ease-out forwards;
-                animation-delay: ${Math.random() * 2}s;
-                will-change: transform;
+                animation-delay: ${Math.random() * 1}s;
+                z-index: 10000;
             `;
             
-            elements.particlesBg.appendChild(confete);
+            document.body.appendChild(confete);
         }
         
         setTimeout(() => {
-            const confetes = elements.particlesBg.querySelectorAll('div');
+            const confetes = document.querySelectorAll('div');
             confetes.forEach(confete => {
-                if (confete.style.animation.includes('confeteFallProfissional')) {
+                if (confete.style.animation && confete.style.animation.includes('confeteFallProfissional')) {
                     confete.remove();
                 }
             });
-        }, 5000);
+        }, 4000);
     }
     
     limparEfeitos() {
         if (elements.roleta) {
             elements.roleta.style.filter = '';
-            elements.roleta.style.boxShadow = '';
-            elements.roleta.style.transform = `rotate(${gameState.anguloAtual}deg)`;
+            elements.roleta.classList.remove('girando');
+        }
+        if (elements.roletaContainer) {
+            elements.roletaContainer.classList.remove('girando');
         }
     }
     
@@ -597,14 +540,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializar sistemas
     inicializarEstilosProfissionais();
     inicializarEventListeners();
-    criarParticulasFundoProfissionais();
     
     // Estado inicial
     gameState.estadoRoleta = ESTADOS_ROLETA.IDLE;
-    
-    if (elements.statusText) {
-        elements.statusText.textContent = 'Pronto para girar com sistema ultra profissional!';
-    }
     
     console.log('✅ RoletaWin Giro Ultra Profissional inicializada com sucesso!');
 });
@@ -639,49 +577,20 @@ function inicializarEstilosProfissionais() {
             }
         }
         
-        @keyframes particleFloatProfissional {
-            0% {
-                transform: translateY(0) rotate(0deg) scale(0.8);
-                opacity: 0.2;
-            }
-            50% {
-                opacity: 0.5;
-                transform: scale(1);
-            }
-            100% {
-                transform: translateY(-100vh) rotate(360deg) scale(0.6);
-                opacity: 0;
-            }
-        }
-        
         /* Melhorar transições da roleta para movimento ultra suave */
         #roleta {
-            transition: filter 0.2s ease, box-shadow 0.2s ease;
+            transition: filter 0.2s ease;
             will-change: transform, filter;
             transform-origin: center center;
-        }
-        
-        /* Otimizar performance com GPU acceleration */
-        .toast {
-            will-change: transform;
-            transform: translateZ(0);
         }
         
         /* Efeitos de hover mais profissionais */
         button:hover {
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
         
         button:active {
             transform: translateY(0);
-        }
-        
-        /* Indicador de velocidade mais sofisticado */
-        #velocidade-bar {
-            transition: width 0.1s ease, background-color 0.2s ease;
-            border-radius: 4px;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
         }
     `;
     document.head.appendChild(style);
@@ -720,6 +629,36 @@ function inicializarEventListeners() {
             handlePararClick();
         }
     });
+}
+
+// Criar efeito ripple nos botões
+function criarEfeitoRippleProfissional(event, elemento) {
+    const rect = elemento.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = event.clientX - rect.left - size / 2;
+    const y = event.clientY - rect.top - size / 2;
+    
+    const ripple = document.createElement('div');
+    ripple.style.cssText = `
+        position: absolute;
+        width: ${size}px;
+        height: ${size}px;
+        left: ${x}px;
+        top: ${y}px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        transform: scale(0);
+        animation: ripple 0.6s ease-out;
+        pointer-events: none;
+    `;
+    
+    elemento.style.position = 'relative';
+    elemento.style.overflow = 'hidden';
+    elemento.appendChild(ripple);
+    
+    setTimeout(() => {
+        ripple.remove();
+    }, 600);
 }
 
 // Handle click no botão girar
@@ -766,7 +705,7 @@ function iniciarGiroUltraProfissional() {
     // Iniciar loop de animação ultra profissional
     iniciarLoopAnimacaoUltraProfissional();
     
-    mostrarToast('A roleta está girando com sistema ultra profissional! Pressione PARAR quando desejar.', 'info');
+    mostrarToast('A roleta está girando! Pressione PARAR quando desejar.', 'info');
 }
 
 // ===== LOOP DE ANIMAÇÃO ULTRA PROFISSIONAL =====
@@ -802,14 +741,11 @@ function iniciarLoopAnimacaoUltraProfissional() {
         // Efeitos visuais profissionais baseados na velocidade
         efeitos.aplicarEfeitosVelocidade(gameState.velocidadeAtual);
         
-        // Atualizar indicadores
-        atualizarIndicadoresProfissionais(estadoFisica);
-        
         // Som durante o giro
         audioSystem.play('giroLoop', gameState.velocidadeAtual);
         
         // Criar partículas durante o giro (menos frequente para performance)
-        if (gameState.velocidadeAtual > 12 && contadorFrames % 8 === 0) {
+        if (gameState.velocidadeAtual > 12 && contadorFrames % 15 === 0) {
             efeitos.criarParticulasGiroProfissionais();
         }
         
@@ -850,7 +786,7 @@ function pararGiroUltraProfissional() {
     // Atualizar interface
     elements.btnParar.disabled = true;
     
-    mostrarToast('Comando de parada recebido! A roleta está desacelerando com precisão ultra profissional...', 'warning');
+    mostrarToast('Comando de parada recebido! A roleta está desacelerando...', 'warning');
 }
 
 // ===== FINALIZAR GIRO ULTRA PROFISSIONAL =====
@@ -871,11 +807,6 @@ function finalizarGiroUltraProfissional() {
     setTimeout(() => {
         efeitos.limparEfeitos();
     }, 800);
-    
-    // Resetar indicadores
-    if (elements.velocidadeBar) {
-        elements.velocidadeBar.style.width = '0%';
-    }
     
     // Som de parada
     audioSystem.play('parada');
@@ -902,8 +833,7 @@ function finalizarGiroUltraProfissional() {
         // Resetar para próximo giro
         setTimeout(() => {
             trocarBotoes(false);
-            elements.statusText.textContent = 'Pronto para outro giro ultra profissional!';
-        }, 4000);
+        }, 3000);
     }, 1000);
 }
 
@@ -923,192 +853,146 @@ function trocarBotoes(girando) {
     }
 }
 
-// Atualizar indicadores profissionais
-function atualizarIndicadoresProfissionais(estadoFisica) {
-    // Atualizar status com informações mais detalhadas
-    let statusText = '';
-    const tempoMinutos = Math.floor(gameState.tempoGiro / 60000);
-    const tempoSegundos = Math.floor((gameState.tempoGiro % 60000) / 1000);
-    const tempoFormatado = `${tempoMinutos}:${tempoSegundos.toString().padStart(2, '0')}`;
-    
-    switch (estadoFisica.fase) {
-        case 'acelerando':
-            statusText = `⚡ Acelerando suavemente... ${estadoFisica.velocidade.toFixed(1)} rpm`;
-            break;
-        case 'constante':
-            statusText = `🌀 Girando fluidamente... ${estadoFisica.velocidade.toFixed(1)} rpm (${tempoFormatado})`;
-            break;
-        case 'desacelerando':
-            statusText = `🎯 Parando com precisão... ${estadoFisica.velocidade.toFixed(1)} rpm`;
-            break;
-    }
-    
-    if (elements.statusText) {
-        elements.statusText.textContent = statusText;
-    }
-    
-    // Atualizar barra de velocidade com animação ultra suave
-    if (elements.velocidadeBar) {
-        const porcentagem = (estadoFisica.velocidade / 30) * 100;
-        elements.velocidadeBar.style.width = `${Math.min(100, porcentagem)}%`;
-        
-        // Gradiente de cor mais sofisticado baseado na velocidade
-        const hue1 = Math.min(120, (estadoFisica.velocidade / 30) * 120);
-        const hue2 = Math.min(60, (estadoFisica.velocidade / 30) * 60);
-        elements.velocidadeBar.style.background = `linear-gradient(90deg, hsl(${hue2}, 70%, 50%), hsl(${hue1}, 70%, 50%))`;
-    }
-}
-
 // Mostrar resultado profissional
 function mostrarResultadoProfissional(setor) {
     const isWin = setor.premio > 0;
     
-    elements.resultado.innerHTML = `
-        <div style="text-align: center; padding: 20px;">
-            <div style="font-size: 4rem; margin-bottom: 20px; animation: bounce 0.6s ease;">
+    // Criar modal de resultado
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        animation: fadeIn 0.3s ease;
+    `;
+    
+    modal.innerHTML = `
+        <div style="
+            background: linear-gradient(135deg, #1a1f3a 0%, #2d1b69 100%);
+            padding: 3rem;
+            border-radius: 20px;
+            text-align: center;
+            border: 2px solid ${isWin ? '#ffd700' : '#ff6b6b'};
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideIn 0.5s ease;
+        ">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">
                 ${isWin ? '🎉' : '😔'}
             </div>
-            <div style="font-size: 2.5rem; margin-bottom: 15px; color: ${isWin ? '#ffd700' : '#ff6b6b'}; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">
+            <div style="
+                font-size: 2.5rem; 
+                margin-bottom: 1rem; 
+                color: ${isWin ? '#ffd700' : '#ff6b6b'}; 
+                font-weight: bold; 
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+                font-family: 'Orbitron', monospace;
+            ">
                 ${setor.texto}
             </div>
-            <div style="font-size: 1.3rem; opacity: 0.9; color: #333;">
-                ${isWin ? '🎊 Parabéns! Você ganhou com o sistema ultra profissional!' : '🔄 Tente novamente com nosso sistema avançado!'}
+            <div style="
+                font-size: 1.3rem; 
+                color: #ffffff; 
+                margin-bottom: 2rem;
+            ">
+                ${isWin ? '🎊 Parabéns! Você ganhou!' : '🔄 Tente novamente!'}
             </div>
-            <div style="font-size: 0.9rem; margin-top: 10px; opacity: 0.7;">
-                Resultado determinado com precisão ultra profissional
-            </div>
+            <button onclick="this.parentElement.parentElement.remove()" style="
+                background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+                color: #0a0e27;
+                border: none;
+                padding: 1rem 2rem;
+                border-radius: 10px;
+                font-weight: 600;
+                cursor: pointer;
+                font-size: 1.1rem;
+                transition: all 0.3s ease;
+            " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                CONTINUAR
+            </button>
         </div>
     `;
     
-    elements.resultado.classList.add('show');
+    document.body.appendChild(modal);
     
+    // Remover modal automaticamente após 5 segundos
     setTimeout(() => {
-        elements.resultado.classList.remove('show');
-    }, 6000);
+        if (modal.parentNode) {
+            modal.remove();
+        }
+    }, 5000);
 }
 
-// ===== FUNÇÕES AUXILIARES ULTRA MELHORADAS =====
-
-// Criar efeito ripple profissional
-function criarEfeitoRippleProfissional(event, button) {
-    const ripple = document.createElement('span');
-    const rect = button.getBoundingClientRect();
-    const size = Math.max(rect.width, rect.height);
-    const x = event.clientX - rect.left - size / 2;
-    const y = event.clientY - rect.top - size / 2;
-    
-    ripple.style.cssText = `
-        width: ${size}px;
-        height: ${size}px;
-        left: ${x}px;
-        top: ${y}px;
-        position: absolute;
-        border-radius: 50%;
-        background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 70%, transparent 100%);
-        transform: scale(0);
-        animation: rippleProfissional 0.6s ease-out;
-        pointer-events: none;
-        will-change: transform;
-    `;
-    
-    // Adicionar animação CSS se não existir
-    if (!document.querySelector('#ripple-profissional-style')) {
-        const style = document.createElement('style');
-        style.id = 'ripple-profissional-style';
-        style.textContent = `
-            @keyframes rippleProfissional {
-                to {
-                    transform: scale(2.5);
-                    opacity: 0;
-                }
-            }
-            
-            @keyframes bounce {
-                0%, 20%, 53%, 80%, 100% {
-                    transform: translate3d(0,0,0);
-                }
-                40%, 43% {
-                    transform: translate3d(0,-15px,0);
-                }
-                70% {
-                    transform: translate3d(0,-7px,0);
-                }
-                90% {
-                    transform: translate3d(0,-2px,0);
-                }
-            }
-        `;
-        document.head.appendChild(style);
-    }
-    
-    button.appendChild(ripple);
-    setTimeout(() => ripple.remove(), 600);
-}
-
-// Toast notifications profissionais
+// Mostrar toast
 function mostrarToast(mensagem, tipo = 'info') {
     const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.textContent = mensagem;
-    
-    const estilos = {
-        success: 'linear-gradient(135deg, #00ff88 0%, #00cc6a 100%)',
-        error: 'linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%)',
-        warning: 'linear-gradient(135deg, #ffd700 0%, #ffed4e 100%)',
-        info: 'linear-gradient(135deg, #4ecdc4 0%, #26a69a 100%)'
+    const cores = {
+        info: '#3498db',
+        success: '#2ecc71',
+        warning: '#f39c12',
+        error: '#e74c3c'
     };
     
-    toast.style.background = estilos[tipo] || estilos.info;
-    toast.style.color = tipo === 'warning' ? '#0a0e27' : '#ffffff';
-    toast.style.willChange = 'transform';
-    toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
-    toast.style.borderRadius = '8px';
-    toast.style.padding = '12px 16px';
-    toast.style.fontSize = '14px';
-    toast.style.fontWeight = '500';
+    toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${cores[tipo]};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 500;
+        z-index: 10000;
+        animation: slideInRight 0.3s ease;
+        max-width: 300px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    `;
     
-    elements.toastContainer.appendChild(toast);
+    toast.textContent = mensagem;
+    document.body.appendChild(toast);
     
-    setTimeout(() => toast.style.transform = 'translateX(0)', 100);
     setTimeout(() => {
-        toast.style.transform = 'translateX(100%)';
-        setTimeout(() => toast.remove(), 300);
-    }, 4000);
+        toast.style.animation = 'slideOutRight 0.3s ease';
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.remove();
+            }
+        }, 300);
+    }, 3000);
 }
 
-// Criar partículas de fundo profissionais
-function criarParticulasFundoProfissionais() {
-    if (!elements.particlesBg) return;
-    
-    for (let i = 0; i < 15; i++) { // Reduzido para melhor performance
-        const particula = document.createElement('div');
-        const tamanho = Math.random() * 3 + 1;
-        const cores = [
-            'rgba(255, 215, 0, 0.2)',
-            'rgba(138, 43, 226, 0.12)',
-            'rgba(255, 105, 180, 0.12)',
-            'rgba(76, 205, 196, 0.12)',
-            'rgba(255, 165, 0, 0.15)'
-        ];
-        
-        particula.style.cssText = `
-            position: absolute;
-            width: ${tamanho}px;
-            height: ${tamanho}px;
-            background: ${cores[Math.floor(Math.random() * cores.length)]};
-            border-radius: 50%;
-            left: ${Math.random() * 100}%;
-            top: ${Math.random() * 100}%;
-            pointer-events: none;
-            filter: blur(0.5px);
-            animation: particleFloatProfissional ${30 + Math.random() * 25}s linear infinite;
-            animation-delay: ${Math.random() * 15}s;
-            will-change: transform;
-        `;
-        
-        elements.particlesBg.appendChild(particula);
+// Adicionar animações CSS
+const animationStyle = document.createElement('style');
+animationStyle.textContent = `
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
     }
-}
-
-console.log('🎰 RoletaWin Giro Ultra Profissional carregada com sucesso!');
+    
+    @keyframes slideIn {
+        from { transform: translateY(-50px) scale(0.9); opacity: 0; }
+        to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    
+    @keyframes slideInRight {
+        from { transform: translateX(100%); }
+        to { transform: translateX(0); }
+    }
+    
+    @keyframes slideOutRight {
+        from { transform: translateX(0); }
+        to { transform: translateX(100%); }
+    }
+    
+    @keyframes ripple {
+        to { transform: scale(4); opacity: 0; }
+    }
+`;
+document.head.appendChild(animationStyle);
 
