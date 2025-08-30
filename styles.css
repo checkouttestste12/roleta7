@@ -420,211 +420,125 @@ body {
     font-weight: 500;
 }
 
-/* Roleta Display - ULTRA MELHORADO PARA GIRO PROFISSIONAL */
+/* Roleta Display - DESIGN UNIFICADO */
 .mesa-roleta-display {
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 2rem 0;
-    height: 220px; /* Aumentado para melhor proporção */
+    height: 220px;
     transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     position: relative;
 }
 
 .mesa-roleta-display.girando {
-    height: 320px; /* Aumentado para maior impacto */
+    height: 320px;
     margin: 3rem 0;
     transform: scale(1.08);
 }
 
-/* Roleta Premium para Giros Grátis - MOVIMENTO ULTRA FLUIDO */
+/* ROLETA PREMIUM SIMPLIFICADA - IGUAL ÀS MESAS */
 .roleta-premium-wrapper {
     position: relative;
-    width: 200px; /* Aumentado */
-    height: 200px; /* Aumentado */
+    width: 200px;
+    height: 200px;
     transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.3));
 }
 
 .roleta-premium-wrapper.girando {
-    width: 280px; /* Aumentado */
-    height: 280px; /* Aumentado */
+    width: 280px;
+    height: 280px;
     transform: scale(1.15);
     filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.7));
 }
 
+/* ROLETA PREMIUM COM DESIGN SIMPLIFICADO IGUAL ÀS MESAS */
 .roleta-premium {
     width: 100%;
     height: 100%;
     border-radius: 50%;
     position: relative;
-    overflow: hidden;
-    box-shadow: 0 0 30px rgba(255, 215, 0, 0.4), 
-                inset 0 0 15px rgba(255, 215, 0, 0.2),
-                0 0 60px rgba(255, 215, 0, 0.1);
-    border: 4px solid #ffd700; /* Aumentado */
+    /* USANDO O MESMO CONIC-GRADIENT DAS MESAS */
+    background: conic-gradient(
+        #ffd700 0deg 45deg,
+        #2a2a2a 45deg 90deg,
+        #ff6b6b 90deg 135deg,
+        #2a2a2a 135deg 180deg,
+        #4ecdc4 180deg 225deg,
+        #2a2a2a 225deg 270deg,
+        #ffd700 270deg 315deg,
+        #2a2a2a 315deg 360deg
+    );
+    border: 4px solid #ffd700;
     transition: all 0.2s ease-out;
     transform-origin: center center;
-    background: radial-gradient(circle at center, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+    animation: rotateMini 4s linear infinite;
 }
 
-/* EFEITOS VISUAIS ULTRA APRIMORADOS PARA GIRO */
+/* EFEITOS VISUAIS PARA GIRO */
 .roleta-premium.girando {
     box-shadow: 0 0 50px rgba(255, 215, 0, 0.8), 
                 inset 0 0 25px rgba(255, 215, 0, 0.4),
-                0 0 100px rgba(255, 215, 0, 0.3),
-                0 0 150px rgba(255, 215, 0, 0.1);
-    animation: roletaGlowUltra 1.2s ease-in-out infinite alternate;
+                0 0 100px rgba(255, 215, 0, 0.3);
+    animation: roletaGlowUltra 1.2s ease-in-out infinite alternate,
+               rotateMini 0.1s linear infinite;
     border-width: 5px;
     border-color: #ffed4e;
 }
 
 @keyframes roletaGlowUltra {
     0% { 
-        box-shadow: 0 0 30px rgba(255, 215, 0, 0.6), 
-                    inset 0 0 15px rgba(255, 215, 0, 0.3),
-                    0 0 80px rgba(255, 215, 0, 0.2);
+        box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
         transform: scale(1);
     }
     100% { 
-        box-shadow: 0 0 70px rgba(255, 215, 0, 1), 
-                    inset 0 0 35px rgba(255, 215, 0, 0.6),
-                    0 0 140px rgba(255, 215, 0, 0.4);
+        box-shadow: 0 0 70px rgba(255, 215, 0, 1);
         transform: scale(1.02);
     }
 }
 
-/* Setores da Roleta - ULTRA MELHORADOS */
-.setor {
-    position: absolute;
-    width: 50%;
-    height: 50%;
-    transform-origin: 100% 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.8rem; /* Aumentado */
-    font-weight: 700; /* Aumentado */
-    text-align: center;
-    border-right: 2px solid rgba(255, 255, 255, 0.15); /* Aumentado */
-    border-bottom: 2px solid rgba(255, 255, 255, 0.15); /* Aumentado */
-    transition: all 0.3s ease;
-    overflow: hidden;
+@keyframes rotateMini {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
-.setor:nth-child(1) { 
-    transform: rotate(0deg); 
-    background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
-}
-.setor:nth-child(2) { 
-    transform: rotate(45deg); 
-    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-    box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.3);
-}
-.setor:nth-child(3) { 
-    transform: rotate(90deg); 
-    background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
-}
-.setor:nth-child(4) { 
-    transform: rotate(135deg); 
-    background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
-    box-shadow: inset 0 0 20px rgba(255, 107, 107, 0.3);
-}
-.setor:nth-child(5) { 
-    transform: rotate(180deg); 
-    background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
-}
-.setor:nth-child(6) { 
-    transform: rotate(225deg); 
-    background: linear-gradient(135deg, #4ecdc4 0%, #26a69a 100%);
-    box-shadow: inset 0 0 20px rgba(76, 205, 196, 0.3);
-}
-.setor:nth-child(7) { 
-    transform: rotate(270deg); 
-    background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
-}
-.setor:nth-child(8) { 
-    transform: rotate(315deg); 
-    background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
-}
-
-.setor-text {
-    transform: rotate(-45deg);
-    color: #ffffff;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Aumentado */
-    font-weight: 800; /* Aumentado */
-    font-size: 0.9rem; /* Aumentado */
-    letter-spacing: 0.5px;
-}
-
-.setor-vazio .setor-text {
-    color: #888888; /* Melhorado */
-    font-weight: 600;
-}
-
-.setor-shine {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.4) 50%, transparent 70%);
-    animation: shine 3s ease-in-out infinite;
-    opacity: 0;
-}
-
-.setor:not(.setor-vazio) .setor-shine {
-    opacity: 1;
-}
-
-@keyframes shine {
-    0%, 100% { 
-        opacity: 0;
-        transform: translateX(-100%);
-    }
-    50% { 
-        opacity: 1;
-        transform: translateX(100%);
-    }
-}
-
-.roleta-center {
+/* CENTRO DA ROLETA - IGUAL ÀS MESAS */
+.mini-center {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 50px; /* Aumentado */
-    height: 50px; /* Aumentado */
-    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+    width: 50px;
+    height: 50px;
+    background: #ffd700;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 6px 25px rgba(255, 215, 0, 0.5); /* Aumentado */
+    color: #0a0e27;
+    font-size: 1.5rem;
+    font-weight: 900;
+    box-shadow: 0 6px 25px rgba(255, 215, 0, 0.5);
     z-index: 10;
     transition: all 0.3s ease;
-    border: 3px solid rgba(255, 255, 255, 0.2); /* Adicionado */
-}
-
-.center-logo {
-    color: #0a0e27;
-    font-size: 1.5rem; /* Aumentado */
-    font-weight: 900;
+    border: 3px solid rgba(255, 255, 255, 0.2);
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .roleta-ponteiro-premium {
     position: absolute;
-    top: -8px; /* Ajustado */
+    top: -8px;
     left: 50%;
     transform: translateX(-50%);
     width: 0;
     height: 0;
-    border-left: 10px solid transparent; /* Aumentado */
-    border-right: 10px solid transparent; /* Aumentado */
-    border-top: 25px solid #ffd700; /* Aumentado */
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 25px solid #ffd700;
     z-index: 15;
-    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4)); /* Aumentado */
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
 }
 
 .ponteiro-glow {
@@ -632,9 +546,9 @@ body {
     top: -3px;
     left: 50%;
     transform: translateX(-50%);
-    width: 6px; /* Aumentado */
-    height: 20px; /* Aumentado */
-    background: rgba(255, 215, 0, 0.8); /* Aumentado */
+    width: 6px;
+    height: 20px;
+    background: rgba(255, 215, 0, 0.8);
     border-radius: 3px;
     animation: ponteiroGlow 1.5s ease-in-out infinite alternate;
 }
@@ -650,7 +564,7 @@ body {
     }
 }
 
-/* Prêmios com animação de fade ULTRA MELHORADA */
+/* Prêmios com animação de fade */
 .mesa-premios {
     margin: 2rem 0;
     transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -717,7 +631,7 @@ body {
     font-weight: 500;
 }
 
-/* Botões de Controle - ULTRA APRIMORADOS PARA SISTEMA PROFISSIONAL */
+/* Botões de Controle */
 .botoes-controle {
     display: flex;
     gap: 1rem;
@@ -730,26 +644,26 @@ body {
     background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
     color: #0a0e27;
     border: none;
-    padding: 1.2rem 2.5rem; /* Aumentado */
-    border-radius: 15px; /* Aumentado */
-    font-weight: 800; /* Aumentado */
-    font-size: 1.1rem; /* Aumentado */
+    padding: 1.2rem 2.5rem;
+    border-radius: 15px;
+    font-weight: 800;
+    font-size: 1.1rem;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     display: flex;
     align-items: center;
-    gap: 0.75rem; /* Aumentado */
+    gap: 0.75rem;
     overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0, 255, 136, 0.4); /* Aumentado */
-    min-width: 160px; /* Aumentado */
+    box-shadow: 0 10px 40px rgba(0, 255, 136, 0.4);
+    min-width: 160px;
     justify-content: center;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
 .btn-jogar:hover {
-    transform: translateY(-4px) scale(1.03); /* Aumentado */
-    box-shadow: 0 15px 50px rgba(0, 255, 136, 0.5); /* Aumentado */
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 15px 50px rgba(0, 255, 136, 0.5);
 }
 
 .btn-jogar:active {
@@ -778,15 +692,15 @@ body {
     left: 100%;
 }
 
-/* BOTÃO PARAR - ESTILO ULTRA DIFERENCIADO */
+/* BOTÃO PARAR */
 .btn-parar {
     background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
-    box-shadow: 0 10px 40px rgba(255, 107, 107, 0.4); /* Aumentado */
+    box-shadow: 0 10px 40px rgba(255, 107, 107, 0.4);
 }
 
 .btn-parar:hover {
-    box-shadow: 0 15px 50px rgba(255, 107, 107, 0.5); /* Aumentado */
-    transform: translateY(-4px) scale(1.03); /* Aumentado */
+    box-shadow: 0 15px 50px rgba(255, 107, 107, 0.5);
+    transform: translateY(-4px) scale(1.03);
 }
 
 .btn-parar:disabled {
@@ -796,7 +710,7 @@ body {
     cursor: not-allowed;
 }
 
-/* Classe hidden melhorada */
+/* Classe hidden */
 .hidden {
     opacity: 0 !important;
     visibility: hidden !important;
@@ -872,10 +786,10 @@ body {
     gap: 2rem;
 }
 
-/* Roleta Mini - MELHORADA PARA CONSISTÊNCIA */
+/* Roleta Mini - DESIGN CONSISTENTE */
 .roleta-mini {
-    width: 100px; /* Aumentado */
-    height: 100px; /* Aumentado */
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
     position: relative;
     background: conic-gradient(
@@ -888,14 +802,9 @@ body {
         #ffd700 270deg 315deg,
         #2a2a2a 315deg 360deg
     );
-    border: 3px solid #ffd700; /* Aumentado */
-    animation: rotateMini 4s linear infinite; /* Mais lento */
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); /* Adicionado */
-}
-
-@keyframes rotateMini {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    border: 3px solid #ffd700;
+    animation: rotateMini 4s linear infinite;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
 }
 
 .mini-center {
@@ -903,17 +812,17 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 25px; /* Aumentado */
-    height: 25px; /* Aumentado */
+    width: 25px;
+    height: 25px;
     background: #ffd700;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #0a0e27;
-    font-size: 0.8rem; /* Aumentado */
+    font-size: 0.8rem;
     font-weight: 900;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); /* Adicionado */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 /* Botões das Mesas */
@@ -953,7 +862,7 @@ body {
     box-shadow: 0 12px 40px rgba(185, 242, 255, 0.4);
 }
 
-/* Responsividade ULTRA MELHORADA */
+/* Responsividade */
 @media (max-width: 768px) {
     .hero-container {
         grid-template-columns: 1fr;
